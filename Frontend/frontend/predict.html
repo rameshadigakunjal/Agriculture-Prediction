@@ -182,8 +182,30 @@
     <script src="js/auth.js"></script>
     <script src="js/prediction.js"></script>
     <script>
-    // --- Fetch districts and years from backend and populate dropdowns ---
+    // --- Authentication Check - Redirect to register if not logged in ---
     document.addEventListener('DOMContentLoaded', function() {
+        // Check authentication status first
+        fetch('/check_session')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.logged_in) {
+                    // User is not logged in, redirect to registration page
+                    window.location.href = 'register_new.html';
+                    return;
+                }
+                
+                // User is logged in, proceed with loading the page
+                loadPageContent();
+            })
+            .catch(error => {
+                console.error('Session check failed:', error);
+                // If session check fails, redirect to registration for safety
+                window.location.href = 'register_new.html';
+            });
+    });
+    
+    // --- Fetch districts and years from backend and populate dropdowns ---
+    function loadPageContent() {
         fetch('/api/options')
             .then(response => response.json())
             .then(data => {
@@ -205,11 +227,14 @@
                     opt.textContent = y;
                     yearSelect.appendChild(opt);
                 });
+                
+                // Initialize prediction form after options are loaded
+                initializePredictionForm();
             })
             .catch(err => {
                 console.error('Error fetching options:', err);
             });
-    });
+    }
     </script>
     <script>
     // --- Recent Inputs Logic ---
@@ -233,7 +258,7 @@
             recentInputsDropdown.appendChild(opt);
         });
     }
-    document.addEventListener('DOMContentLoaded', function() {
+    function initializeRecentInputs() {
         populateRecentInputsDropdown();
         recentInputsDropdown.addEventListener('change', function() {
             const recents = JSON.parse(localStorage.getItem(recentInputsKey)) || [];
@@ -248,17 +273,18 @@
                 document.getElementById('humidity').value = recents[idx].humidity;
             }
         });
-    });
+    }
     </script>
     <script>
     // --- Prediction Form Submission ---
-    document.addEventListener('DOMContentLoaded', function() {
+    function initializePredictionForm() {
         const predictionForm = document.getElementById('predictionForm');
         const predictionResults = document.getElementById('predictionResults');
         const yieldOutput = document.getElementById('yieldOutput');
         const npkOutput = document.getElementById('npkOutput');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const errorMessage = document.getElementById('errorMessage');
+        
         function showElement(element) { element.classList.remove('hidden'); }
         function hideElement(element) { element.classList.add('hidden'); }
         function resetResultsDisplay() {
@@ -314,7 +340,10 @@
                 }
             });
         }
-    });
+        
+        // Initialize recent inputs after form is ready
+        initializeRecentInputs();
+    }
     </script>
 </body>
 </html>
