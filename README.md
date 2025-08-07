@@ -92,3 +92,9 @@ Commit your changes (git commit -m "Add feature-name").<br>
 Push to the branch (git push origin feature-name).<br>
 Open a pull request on GitHub.<br>
 
+**🙌 Thanks for Checking Out Our Project!** <br>
+
+We hope this Machine Learning App empowers you with cutting-edge insights and predictions.
+**If you found this project helpful or inspiring, feel free to ⭐ star the repo — it helps others discover it too!**
+**Made with ❤️ using Python + Scikit-learn + Jupyter**
+
