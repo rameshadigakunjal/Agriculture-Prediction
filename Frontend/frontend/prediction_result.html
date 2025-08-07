@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body { background: #f8fcf8; font-family: 'Inter', Arial, sans-serif; }
-        .result-card { background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(33,145,80,0.10); padding: 2.5rem 2rem; max-width: 500px; margin: 2rem auto; }
+        .result-card { background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(33,145,80,0.10); padding: 3.5rem 3rem; max-width: 700px; margin: 2.5rem auto; }
         .results-title { color: #219150; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
         .result-item { margin-bottom: 1.2rem; font-size: 1.2rem; }
         .btn-primary { background: #219150; color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
@@ -47,6 +47,7 @@
                 <span id="npkOutput" class="result-value">N: -- P: -- K: --</span>
             </div>
             <a href="predict.html" class="btn btn-primary mt-4">Try Another Prediction</a>
+        <button id="downloadPdfBtn" class="btn btn-primary mt-4" style="margin-left: 10px;">Download PDF</button>
         </div>
     </main>
     <footer class="footer">
@@ -59,6 +60,8 @@
             </script>
         </div>
     </footer>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
     // Read query params and show results
     function getParam(name) {
@@ -70,10 +73,38 @@
         const nVal = getParam('n');
         const pVal = getParam('p');
         const kVal = getParam('k');
-        document.getElementById('yieldOutput').textContent = yieldVal ? `${parseFloat(yieldVal).toFixed(2)} Kg/ha` : '--';
-        document.getElementById('npkOutput').textContent = (nVal && pVal && kVal)
+        const yieldText = yieldVal ? `${parseFloat(yieldVal).toFixed(2)} Kg/ha` : '--';
+        const npkText = (nVal && pVal && kVal)
             ? `N: ${parseFloat(nVal).toFixed(2)} P: ${parseFloat(pVal).toFixed(2)} K: ${parseFloat(kVal).toFixed(2)}`
             : 'N: -- P: -- K: --';
+        document.getElementById('yieldOutput').textContent = yieldText;
+        document.getElementById('npkOutput').textContent = npkText;
+
+        // Download PDF functionality
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            const doc = new window.jspdf.jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(24);
+            doc.text('AgroVedan Prediction Result', 20, 30);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Rice Yield & Soil Nutrient Predictor', 20, 45);
+            doc.setLineWidth(0.5);
+            doc.line(20, 50, 190, 50);
+            doc.setFontSize(16);
+            doc.text('Predicted Rice Yield:', 20, 70);
+            doc.setFont('helvetica', 'bold');
+            doc.text(yieldText, 80, 70);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Predicted NPK Requirements:', 20, 90);
+            doc.setFont('helvetica', 'bold');
+            doc.text(npkText, 100, 90);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(12);
+            doc.text('Powered by Advanced Machine Learning', 20, 270);
+            doc.text('AgroVedan - Transforming Agriculture through Data Science', 20, 280);
+            doc.save('AgroVedan_Prediction_Result.pdf');
+        });
     });
     </script>
 </body>

@@ -7,6 +7,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <!-- Firebase Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- Optionally, Firebase Auth (not used for plain DB, but for real apps use Auth) -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script> -->
+    <script>
+      // Firebase config for AgroVedan project
+      const firebaseConfig = {
+        apiKey: "AIzaSyAUVV666p3AAtAOQaQaucpaVt7GjXFIXZs",
+        authDomain: "agrovedan.firebaseapp.com",
+        databaseURL: "https://agrovedan-default-rtdb.firebaseio.com",
+        projectId: "agrovedan",
+        storageBucket: "agrovedan.appspot.com",
+        messagingSenderId: "1091234567890",
+        appId: "1:1091234567890:web:abcdef1234567890abcdef"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
     <style>
         .message {
             padding: 10px;
@@ -206,65 +225,48 @@
                 showMessage('Please fill in all required fields', 'error');
                 return;
             }
-            
             if (username.length < 3) {
                 showMessage('Username must be at least 3 characters long', 'error');
                 return;
             }
-            
             if (password.length < 6) {
                 showMessage('Password must be at least 6 characters long', 'error');
                 return;
             }
-            
             if (password !== confirmPassword) {
                 showMessage('Passwords do not match', 'error');
                 return;
             }
-            
             // Show loading state
             button.classList.add('loading');
             buttonText.textContent = 'Creating Account...';
             button.disabled = true;
-            
             try {
-                console.log('👤 Sending registration request...');
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        email: email,
-                        password: password
-                    })
-                });
-                
-                console.log('📡 Response status:', response.status);
-                const data = await response.json();
-                console.log('📦 Response data:', data);
-                
-                if (data.success) {
-                    showMessage('Account created successfully! Redirecting to login...', 'success');
-                    buttonText.textContent = 'Success!';
-                    button.style.backgroundColor = '#28a745';
-                    
-                    // Redirect to login page
-                    setTimeout(() => {
-                        window.location.href = 'login_new.html';
-                    }, 2000);
-                } else {
-                    showMessage(data.message || 'Registration failed', 'error');
-                    // Reset button
+                // Check if user already exists
+                const userRef = firebase.database().ref('users/' + username);
+                const snapshot = await userRef.get();
+                if (snapshot.exists()) {
+                    showMessage('Username already exists. Please choose another.', 'error');
                     button.classList.remove('loading');
                     buttonText.textContent = 'Create Account';
                     button.disabled = false;
+                    return;
                 }
+                // Save user info (for demo only, do NOT store plain passwords in production)
+                await userRef.set({
+                    username: username,
+                    email: email,
+                    password: password
+                });
+                showMessage('Account created successfully! Redirecting to login...', 'success');
+                buttonText.textContent = 'Success!';
+                button.style.backgroundColor = '#28a745';
+                setTimeout(() => {
+                    window.location.href = 'login_new.html';
+                }, 2000);
             } catch (error) {
                 console.error('❌ Registration error:', error);
-                showMessage('Network error. Please try again.', 'error');
-                // Reset button
+                showMessage('Registration failed: ' + error.message, 'error');
                 button.classList.remove('loading');
                 buttonText.textContent = 'Create Account';
                 button.disabled = false;
