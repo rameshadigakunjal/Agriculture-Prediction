@@ -7,4 +7,4 @@ joblib
 streamlit
 
 # venv\Scripts\activate
-# 
+# Python main.py

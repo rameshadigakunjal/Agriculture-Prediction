@@ -22,7 +22,7 @@ def create_app():
         try:
             return send_from_directory(app.static_folder, 'index.html')
         except:
-            return "<h1>Welcome to AgriPredict</h1><p><a href='/login'>Login</a> | <a href='/register'>Register</a></p>"
+            return "<h1>Welcome to AgroVedan</h1><p><a href='/login'>Login</a> | <a href='/register'>Register</a></p>"
     
     @app.route('/login')
     @app.route('/login.html')

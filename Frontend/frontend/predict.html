@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriPredict - Rice Yield Prediction</title>
+    <title>AgroVedan - Rice Yield Prediction</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
     <style>
         body { background: #f8fcf8; font-family: 'Inter', Arial, sans-serif; }
         .predict-card { background: #fff; border-radius: 18px; box-shadow: 0 2px 16px rgba(33,145,80,0.10); padding: 2.5rem 2rem; max-width: 600px; margin: 2rem auto; }
@@ -23,14 +25,40 @@
         .form-section-header i { color: #219150; font-size: 1.2rem; margin-right: 0.5rem; }
         .form-section-header h3 { font-size: 1.1rem; font-weight: 600; color: #219150; margin: 0; }
         .form-section-header .section-description { margin-left: auto; color: #888; font-size: 0.95rem; }
+        .climate-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.icon-blue {
+  color: #219150;
+}
+.icon-red {
+  color: #219150;
+}
+.icon-green {
+  color: #219150;
+}
+
+
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container flex justify-between items-center" style="max-width:1200px;margin:auto;">
             <div class="logo" style="display:flex;align-items:center;">
-                <img src="assets/images/logo.png" alt="AgriPredict Logo" class="h-8" style="height:40px;">
-                <span class="logo-text">AgriPredict</span>
+                <img src="assets/images/logo.png" alt="AgroVedan Logo" class="h-8" style="height:40px;">
+                <span class="logo-text">AgroVedan</span>
                 <span class="tagline">Rice Yield & Soil Nutrient Predictor</span>
             </div>
             <nav class="nav-menu">
@@ -87,24 +115,37 @@
                     </div>
                 </div>
                 <div class="form-section-header">
-                    <i class="fas fa-cloud-sun-rain section-icon"></i>
-                    <h3 class="section-heading">Climate Data</h3>
-                    <span class="section-description">Environmental conditions for your area</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div class="input-group">
-                        <i class="fas fa-cloud-showers-heavy input-icon"></i>
-                        <input type="number" id="rainfall" placeholder="e.g., 300" required class="input-field" min="0" step="any">
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-thermometer-half input-icon"></i>
-                        <input type="number" id="temperature" placeholder="e.g., 28" required class="input-field" step="any">
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-humidity input-icon"></i>
-                        <input type="number" id="humidity" placeholder="e.g., 70" required class="input-field" min="0" max="100" step="any">
-                    </div>
-                </div>
+  <i class="fas fa-cloud-sun-rain section-icon"></i>
+  <h3 class="section-heading">Climate Data</h3>
+  <span class="section-description">Environmental conditions for your area</span>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  <!-- Rainfall -->
+  <div class="climate-input">
+    <label class="input-label">
+      <i class="fas fa-cloud-showers-heavy icon-blue"></i> Rainfall (mm)
+    </label>
+    <input type="number" id="rainfall" placeholder="e.g., 300" class="input-field" min="0" step="any" required>
+  </div>
+
+  <!-- Temperature -->
+  <div class="climate-input">
+    <label class="input-label">
+      <i class="fas fa-thermometer-half icon-red"></i> Temperature (°C)
+    </label>
+    <input type="number" id="temperature" placeholder="e.g., 28" class="input-field" step="any" required>
+  </div>
+
+  <!-- Humidity -->
+  <div class="climate-input">
+    <label class="input-label">
+      <i class="fas fa-wind icon-green"></i> Humidity (%)
+    </label>
+    <input type="number" id="humidity" placeholder="e.g., 70" class="input-field" min="0" max="100" step="any" required>
+  </div>
+</div>
+
                 <button type="submit" id="predictBtn" class="btn btn-primary w-full">Get Prediction</button>
             </form>
             <div id="predictionResults" class="prediction-results mt-8 hidden">
@@ -131,7 +172,7 @@
     <footer class="footer">
         <div class="container text-center">
             <p class="footer-text">Powered by Advanced Machine Learning</p>
-            <p class="footer-text">AgriPredict &copy; <span id="year"></span> - Transforming Agriculture through Data Science</p>
+            <p class="footer-text">AgroVedan &copy; <span id="year"></span> - Transforming Agriculture through Data Science</p>
             <script>
                 document.getElementById("year").textContent = new Date().getFullYear();
             </script>

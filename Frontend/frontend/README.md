@@ -1,4 +1,4 @@
-This folder contains the frontend files for AgriPredict. Keep only the following main files:
+This folder contains the frontend files for AgroVedan. Keep only the following main files:
 - index.html
 - login_new.html
 - register_new.html

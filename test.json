@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "AgriPredict Backend",
+    "name": "AgroVedan Backend",
     "description": "Test Rice Yield Prediction API (with district and year)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
